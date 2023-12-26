@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "amanahkirim/db/mongoo"
 	"encoding/json"
 	"fmt"
 	"net/http"

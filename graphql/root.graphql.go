@@ -22,17 +22,10 @@ var mutationType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Mutation",
 		Fields: graphql.Fields{
-			"updateuser": &graphql.Field{
-				Type: user.UserType,
-				Args: graphql.FieldConfigArgument{
-					"id": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-					"newName": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: user.UpdateUser,
+			"createUser": &graphql.Field{
+				Type:    user.CreateUserType,
+				Args:    user.CreateUserArgs,
+				Resolve: user.CreateUser,
 			},
 		},
 	},

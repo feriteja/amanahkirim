@@ -32,7 +32,24 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		RequestString: query,
 	})
 
-	json.NewEncoder(w).Encode(result)
+	if len(result.Errors) > 0 {
+		errList := make([]string, len(result.Errors))
+		for i, err := range result.Errors {
+			errList[i] = err.Message
+		}
+		http.Error(w, fmt.Sprintf("GraphQL error(s): %v", errList), http.StatusBadRequest)
+		return
+	}
+
+	responseData, err := json.Marshal(result.Data)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseData)
 }
 
 func main() {

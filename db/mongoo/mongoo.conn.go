@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	clientUser    *mongo.Client
-	clientProduct *mongo.Client
+	ClientUser    *mongo.Client
+	ClientProduct *mongo.Client
 )
 
 func init() {

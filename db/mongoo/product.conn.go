@@ -26,10 +26,10 @@ func initProductDb() {
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", username, password, host, port, dbName)
 
 	clientOptions := options.Client().ApplyURI(uri)
-	clientProduct, _ = mongo.Connect(context.Background(), clientOptions)
+	ClientProduct, _ = mongo.Connect(context.Background(), clientOptions)
 
 	// Check the connection
-	err := clientUser.Ping(context.Background(), nil)
+	err := ClientProduct.Ping(context.Background(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

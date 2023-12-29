@@ -26,10 +26,10 @@ func initUserDb() {
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", username, password, host, port, dbName)
 
 	clientOptions := options.Client().ApplyURI(uri)
-	clientUser, _ = mongo.Connect(context.Background(), clientOptions)
+	ClientUser, _ = mongo.Connect(context.Background(), clientOptions)
 
 	// Check the connection
-	err := clientUser.Ping(context.Background(), nil)
+	err := ClientUser.Ping(context.Background(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

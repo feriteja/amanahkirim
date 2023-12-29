@@ -1,8 +1,6 @@
-package graphql
+package user
 
 import "github.com/graphql-go/graphql"
-
-var Testaaa = "kuyyy"
 
 var UserType = graphql.NewObject(
 	graphql.ObjectConfig{
@@ -13,3 +11,9 @@ var UserType = graphql.NewObject(
 		},
 	},
 )
+
+var UserArgs = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+}

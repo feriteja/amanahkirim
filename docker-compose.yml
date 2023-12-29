@@ -25,7 +25,8 @@ services:
     env_file:
       - .env
     environment:
-      DB_HOST: mongodb
+      DB_USER_HOST: mongodb
+      DB_PRODUCT_HOST: mongodb
     depends_on:
       - mongodb
     networks:

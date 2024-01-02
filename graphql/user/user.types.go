@@ -12,6 +12,15 @@ var UserType = graphql.NewObject(
 	},
 )
 
+var CredentialType = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "Credential",
+		Fields: graphql.Fields{
+			"jwt_token": &graphql.Field{Type: graphql.String},
+		},
+	},
+)
+
 var CreateUserType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "CreateUser",
@@ -34,7 +43,16 @@ var CreateUserArgs = graphql.FieldConfigArgument{
 }
 
 var UserArgs = graphql.FieldConfigArgument{
-	"id": &graphql.ArgumentConfig{
-		Type: graphql.Int,
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+var LoginArgs = graphql.FieldConfigArgument{
+	"username": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"password": &graphql.ArgumentConfig{
+		Type: graphql.String,
 	},
 }

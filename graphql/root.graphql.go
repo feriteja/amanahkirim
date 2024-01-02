@@ -13,6 +13,7 @@ var queryType = graphql.NewObject(
 		Fields: graphql.Fields{
 			"user":    user.UserField,
 			"users":   user.UsersField,
+			"login":   user.LoginField,
 			"product": product.ProductField,
 		},
 	},

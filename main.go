@@ -19,7 +19,7 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var request map[string]interface{}
 		if err := decoder.Decode(&request); err != nil {
-			http.Error(w, "Error decoding request body", http.StatusBadRequest)
+			http.Error(w, "Error decoding request bodyss", http.StatusBadRequest)
 			return
 		}
 		query, _ = request["query"].(string)
@@ -27,18 +27,7 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		query = r.URL.Query().Get("query")
 	}
 
-	if query != "" {
-		queryName := utils.ExtractQueryName(query)
-
-		if _, requiresAuth := utils.AuthenticatedQueries[queryName]; requiresAuth {
-			if r.Context().Value("user") == nil {
-
-				http.Error(w, "Unauthorized: Missing Authorization token", http.StatusUnauthorized)
-				return
-			}
-		}
-	}
-
+	// user, _ := r.Context().Value("user").(string)
 	result := graphql.Do(graphql.Params{
 		Schema:        graphqlc.Schema,
 		RequestString: query,
@@ -54,14 +43,8 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonData, err := json.Marshal(result)
-	if err != nil {
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
+	json.NewEncoder(w).Encode(result)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonData)
 }
 
 func main() {

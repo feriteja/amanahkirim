@@ -12,17 +12,18 @@ import (
 )
 
 func GetUser(p graphql.ResolveParams) (interface{}, error) {
-	userID, ok := p.Args["id"].(int)
+
+	name, ok := p.Args["name"].(string)
 	if !ok {
-		return nil, fmt.Errorf("invalid or missing 'id' parameter")
+		return nil, fmt.Errorf("invalid or missing 'name' parameter")
 	}
 
-	user := Users[userID]
-	if user != nil {
-		return user, nil
+	user, err := utils.GenerateJWT(name)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, fmt.Errorf("user with ID %d not found", userID)
+	return user, nil
 }
 
 func UpdateUser(p graphql.ResolveParams) (interface{}, error) {
@@ -68,5 +69,24 @@ func CreateUser(p graphql.ResolveParams) (interface{}, error) {
 	response := map[string]interface{}{"username": username}
 
 	return response, nil
+}
 
+func login(p graphql.ResolveParams) (interface{}, error) {
+	username, ok := p.Args["username"].(string)
+	if !ok {
+		return nil, fmt.Errorf("invalid or missing 'username' parameter")
+	}
+	// password, ok := p.Args["password"].(string)
+	// if !ok {
+	// 	return nil, fmt.Errorf("invalid or missing 'password' parameter")
+	// }
+
+	token, err := utils.GenerateJWT(username)
+	if err != nil {
+		return nil, errors.New("Failed to login")
+	}
+
+	response := map[string]interface{}{"jwt_token": token}
+
+	return response, nil
 }

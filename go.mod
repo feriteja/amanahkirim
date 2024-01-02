@@ -5,6 +5,11 @@ go 1.21.0
 require github.com/graphql-go/graphql v0.8.1
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+)
+
+require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/graphql-go/handler v0.2.3
 	github.com/joho/godotenv v1.5.1 // indirect

@@ -25,6 +25,12 @@ var UsersField = &graphql.Field{
 	Type:    graphql.NewList(UserType),
 	Resolve: GetAllUsers,
 }
+
+var LoginField = &graphql.Field{
+	Type:    CredentialType,
+	Args:    LoginArgs,
+	Resolve: login,
+}
 var CreateUserField = &graphql.Field{
 	Type:    CreateUserType,
 	Args:    CreateUserArgs,

@@ -7,6 +7,9 @@ import (
 )
 
 func GetProduct(p graphql.ResolveParams) (interface{}, error) {
+	user, _ := p.Context.Value("user").(string)
+
+	fmt.Printf("token: %s", user)
 	userID, ok := p.Args["id"].(int)
 	if !ok {
 		return nil, fmt.Errorf("invalid or missing 'id' parameter")

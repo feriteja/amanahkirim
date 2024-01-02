@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "amanahkirim/db/mongoo"
+	"amanahkirim/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,11 +15,10 @@ import (
 func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 	var query string
 
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		decoder := json.NewDecoder(r.Body)
 		var request map[string]interface{}
-		err := decoder.Decode(&request)
-		if err != nil {
+		if err := decoder.Decode(&request); err != nil {
 			http.Error(w, "Error decoding request body", http.StatusBadRequest)
 			return
 		}
@@ -27,9 +27,22 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		query = r.URL.Query().Get("query")
 	}
 
+	if query != "" {
+		queryName := utils.ExtractQueryName(query)
+
+		if _, requiresAuth := utils.AuthenticatedQueries[queryName]; requiresAuth {
+			if r.Context().Value("user") == nil {
+
+				http.Error(w, "Unauthorized: Missing Authorization token", http.StatusUnauthorized)
+				return
+			}
+		}
+	}
+
 	result := graphql.Do(graphql.Params{
 		Schema:        graphqlc.Schema,
 		RequestString: query,
+		Context:       r.Context(),
 	})
 
 	if len(result.Errors) > 0 {
@@ -41,19 +54,19 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseData, err := json.Marshal(result.Data)
+	jsonData, err := json.Marshal(result)
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(responseData)
+	w.Write(jsonData)
 }
 
 func main() {
-	http.HandleFunc("/graphql", graphqlHandler)
+	handler := utils.AuthenticationMiddleware(http.HandlerFunc(graphqlHandler))
+	http.Handle("/graphql", handler)
 	fmt.Println("GraphQL server is running on http://localhost:8080/graphql")
 	http.ListenAndServe(":8080", nil)
 }

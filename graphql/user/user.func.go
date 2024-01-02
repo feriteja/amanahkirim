@@ -3,10 +3,9 @@ package user
 import (
 	"amanahkirim/db/mongoo"
 	"amanahkirim/graphql/user/utils"
-	rootUtils "amanahkirim/utils"
 	"context"
+	"errors"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/graphql-go/graphql"
@@ -51,7 +50,7 @@ func CreateUser(p graphql.ResolveParams) (interface{}, error) {
 
 	hashPassword, err := utils.HashPassword(password)
 	if err != nil {
-		return nil, &rootUtils.AppResponse{Code: http.StatusBadRequest, Message: "Failed to encrypt password"}
+		return nil, errors.New("Failed to encrypt password")
 	}
 
 	user := mongoo.User{
@@ -63,7 +62,7 @@ func CreateUser(p graphql.ResolveParams) (interface{}, error) {
 
 	_, err = collection.InsertOne(ctx, user)
 	if err != nil {
-		return nil, &rootUtils.AppResponse{Code: http.StatusBadRequest, Message: "Failed to create new user"}
+		return nil, errors.New("Failed to create new user")
 	}
 
 	response := map[string]interface{}{"username": username}

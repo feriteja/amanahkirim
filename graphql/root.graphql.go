@@ -23,7 +23,7 @@ var mutationType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Mutation",
 		Fields: graphql.Fields{
-			"createUser": user.CreateUserField,
+			"register": user.RegisterField,
 		},
 	},
 )

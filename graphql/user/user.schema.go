@@ -7,8 +7,8 @@ import (
 
 type User struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Username string             `json:"username"`
-	Password string             `json:"password"`
+	Username string             `bson:"username" unique:"true"`
+	Password string             `bson:"password"`
 }
 
 var Users = map[int]*User{
@@ -29,10 +29,10 @@ var UsersField = &graphql.Field{
 var LoginField = &graphql.Field{
 	Type:    CredentialType,
 	Args:    LoginArgs,
-	Resolve: login,
+	Resolve: Login,
 }
-var CreateUserField = &graphql.Field{
-	Type:    CreateUserType,
-	Args:    CreateUserArgs,
-	Resolve: CreateUser,
+var RegisterField = &graphql.Field{
+	Type:    RegisterType,
+	Args:    RegisterArgs,
+	Resolve: RegisterUser,
 }

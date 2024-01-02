@@ -21,16 +21,16 @@ var CredentialType = graphql.NewObject(
 	},
 )
 
-var CreateUserType = graphql.NewObject(
+var RegisterType = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "CreateUser",
+		Name: "Register",
 		Fields: graphql.Fields{
-			"username": &graphql.Field{Type: graphql.String},
+			"jwt_token": &graphql.Field{Type: graphql.String},
 		},
 	},
 )
 
-var CreateUserArgs = graphql.FieldConfigArgument{
+var RegisterArgs = graphql.FieldConfigArgument{
 	"username": &graphql.ArgumentConfig{
 		Type: graphql.NewNonNull(graphql.String),
 	},

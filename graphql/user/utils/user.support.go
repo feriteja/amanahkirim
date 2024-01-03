@@ -3,11 +3,26 @@ package utils
 import (
 	"fmt"
 	"os"
+	"reflect"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Claims struct {
+	Data map[string]interface{} `json:"data"`
+	jwt.StandardClaims
+}
+
+type JwtData struct {
+	ID        string `json:"_id"`
+	Username  string `json:"username"`
+	BuyerID   string `json:"buyer_id"`
+	SellerID  string `json:"seller_id"`
+	ProfileID string `json:"profile_id"`
+}
 
 func HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -18,14 +33,34 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func GenerateJWT(username string) (string, error) {
+func GenerateJWT(jwtData interface{}) (string, error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
+	expirationEnv := os.Getenv("JWT_EXPIRED")
+
+	days, err := strconv.Atoi(expirationEnv)
+	if err != nil {
+		return "", fmt.Errorf("Error parsing expiration duration: %v", err)
+	}
+	expiration := time.Duration(days) * 24 * time.Hour
+
+	dataMap := make(map[string]interface{})
+	val := reflect.ValueOf(jwtData)
+	if val.Kind() == reflect.Struct {
+		for i := 0; i < val.NumField(); i++ {
+			field := val.Type().Field(i)
+			dataMap[field.Name] = val.Field(i).Interface()
+		}
+	}
+
+	claims := Claims{
+		Data: dataMap,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(expiration).Unix(),
+		},
+	}
 
 	// Create the token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username": username,
-		"exp":      time.Now().Add(time.Hour * 1).Unix(), // Token expiration time (1 hour in this example)
-	})
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Sign the token with the secret key
 	tokenString, err := token.SignedString([]byte(jwtSecret))
@@ -34,4 +69,8 @@ func GenerateJWT(username string) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func ComparePassword(hashedPassword []byte, inputPassword string) error {
+	return bcrypt.CompareHashAndPassword(hashedPassword, []byte(inputPassword))
 }

@@ -11,6 +11,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -74,14 +75,20 @@ func RegisterUser(p graphql.ResolveParams) (interface{}, error) {
 		Password: hashPassword,
 	}
 
-	_, err = collection.InsertOne(ctx, user)
+	result, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		return nil, errors.New("Failed to create new user")
 	}
 
-	token, err := utils.GenerateJWT(username)
+	jwtData := utils.JwtData{
+		ID:       result.InsertedID.(primitive.ObjectID).Hex(),
+		Username: username,
+	}
+
+	token, err := utils.GenerateJWT(jwtData)
 	if err != nil {
-		return nil, errors.New("Failed to login")
+		log.Println(err)
+		return nil, errors.New("Failed to generate token, please re-login")
 	}
 
 	response := map[string]interface{}{"jwt_token": token}
@@ -90,16 +97,42 @@ func RegisterUser(p graphql.ResolveParams) (interface{}, error) {
 }
 
 func Login(p graphql.ResolveParams) (interface{}, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	username, ok := p.Args["username"].(string)
 	if !ok {
-		return nil, fmt.Errorf("invalid or missing 'username' parameter")
+		return nil, errors.New("invalid or missing 'username' parameter")
 	}
-	// password, ok := p.Args["password"].(string)
-	// if !ok {
-	// 	return nil, fmt.Errorf("invalid or missing 'password' parameter")
-	// }
 
-	token, err := utils.GenerateJWT(username)
+	password, ok := p.Args["password"].(string)
+	if !ok {
+		return nil, errors.New("invalid or missing 'password' parameter")
+	}
+	collection := mongoo.ClientUser.Database("userdb").Collection("users")
+	filter := bson.D{{Key: "username", Value: username}}
+
+	var result User
+
+	err := collection.FindOne(ctx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		return nil, errors.New("username/password are incorect")
+	} else if err != nil {
+		return false, err
+	}
+
+	err = utils.ComparePassword([]byte(result.Password), password)
+
+	if err != nil {
+		return nil, errors.New("username/password are incorect")
+	}
+
+	jwtData := utils.JwtData{
+		ID:       result.ID.Hex(),
+		Username: username,
+	}
+
+	token, err := utils.GenerateJWT(jwtData)
 	if err != nil {
 		return nil, errors.New("Failed to login")
 	}

@@ -36,3 +36,12 @@ func initUserDb() {
 
 	fmt.Println("MongoDB user connected successfully!")
 }
+
+// func UserCollection(collectionName string) *mongo.Collection {
+// 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// 	defer cancel()
+
+// 	collection := ClientUser.Database("userdb").Collection(collectionName)
+
+// 	return collection
+// }

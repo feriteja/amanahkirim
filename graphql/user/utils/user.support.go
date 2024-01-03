@@ -18,7 +18,6 @@ type Claims struct {
 
 type JwtData struct {
 	ID        string `json:"_id"`
-	Username  string `json:"username"`
 	BuyerID   string `json:"buyer_id"`
 	SellerID  string `json:"seller_id"`
 	ProfileID string `json:"profile_id"`

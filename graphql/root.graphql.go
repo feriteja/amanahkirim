@@ -11,8 +11,6 @@ var queryType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"user":    user.UserField,
-			"users":   user.UsersField,
 			"login":   user.LoginField,
 			"product": product.ProductField,
 		},
@@ -24,6 +22,7 @@ var mutationType = graphql.NewObject(
 		Name: "Mutation",
 		Fields: graphql.Fields{
 			"register": user.RegisterField,
+			"profile":  user.ProfileField,
 		},
 	},
 )

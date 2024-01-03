@@ -42,6 +42,45 @@ var RegisterArgs = graphql.FieldConfigArgument{
 	},
 }
 
+var ProfileType = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "Profile",
+		Fields: graphql.Fields{
+			"jwt_token": &graphql.Field{Type: graphql.String},
+		},
+	},
+)
+
+var ProfileArgs = graphql.FieldConfigArgument{
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"email": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"phone_numbers": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"city": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"province": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"country": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"postal_code": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"date_of_birth": &graphql.ArgumentConfig{
+		Type: graphql.DateTime, // You may need to define a custom scalar for Date
+	},
+	"profile_picture_url": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
 var UserArgs = graphql.FieldConfigArgument{
 	"name": &graphql.ArgumentConfig{
 		Type: graphql.String,

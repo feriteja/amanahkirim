@@ -15,7 +15,7 @@ import (
 
 var AuthenticatedQueries = map[string]struct{}{
 	"product": {},
-	"Query2":  {},
+	"profile": {},
 	// Add other query names as needed
 }
 

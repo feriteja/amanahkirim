@@ -1,6 +1,8 @@
 package user
 
 import (
+	"amanahkirim/graphql/user/seller"
+
 	"github.com/graphql-go/graphql"
 )
 
@@ -21,8 +23,14 @@ var RegisterField = &graphql.Field{
 	Resolve: RegisterUser,
 }
 
-var ProfileField = &graphql.Field{
-	Type:    ProfileType,
-	Args:    ProfileArgs,
-	Resolve: NewProfile,
+var AddBuyerField = &graphql.Field{
+	Type:    AddBuyerType,
+	Args:    AddBuyerArgs,
+	Resolve: NewBuyer,
+}
+
+var AddSellerField = &graphql.Field{
+	Type:    AddSellerType,
+	Args:    AddSellerArgs,
+	Resolve: seller.NewSeller,
 }

@@ -39,7 +39,7 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		for i, err := range result.Errors {
 			errList[i] = err.Message
 		}
-		http.Error(w, fmt.Sprintf("GraphQL error(s): %v", errList), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("GraphQL errosr(s): %v", errList), http.StatusBadRequest)
 		return
 	}
 

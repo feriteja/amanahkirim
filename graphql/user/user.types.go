@@ -42,20 +42,17 @@ var RegisterArgs = graphql.FieldConfigArgument{
 	},
 }
 
-var ProfileType = graphql.NewObject(
+var AddSellerType = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "Profile",
+		Name: "AddSeller",
 		Fields: graphql.Fields{
 			"jwt_token": &graphql.Field{Type: graphql.String},
 		},
 	},
 )
 
-var ProfileArgs = graphql.FieldConfigArgument{
+var AddSellerArgs = graphql.FieldConfigArgument{
 	"name": &graphql.ArgumentConfig{
-		Type: graphql.NewNonNull(graphql.String),
-	},
-	"email": &graphql.ArgumentConfig{
 		Type: graphql.NewNonNull(graphql.String),
 	},
 	"phone_numbers": &graphql.ArgumentConfig{
@@ -73,8 +70,44 @@ var ProfileArgs = graphql.FieldConfigArgument{
 	"postal_code": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
+	"profile_picture_url": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+var AddBuyerType = graphql.NewObject(
+	graphql.ObjectConfig{
+		Name: "AddBuyer",
+		Fields: graphql.Fields{
+			"jwt_token": &graphql.Field{Type: graphql.String},
+		},
+	},
+)
+
+var AddBuyerArgs = graphql.FieldConfigArgument{
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"phone_numbers": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"city": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"province": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"regency": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"country": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"postal_code": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
 	"date_of_birth": &graphql.ArgumentConfig{
-		Type: graphql.DateTime, // You may need to define a custom scalar for Date
+		Type: graphql.NewNonNull(graphql.String),
 	},
 	"profile_picture_url": &graphql.ArgumentConfig{
 		Type: graphql.String,

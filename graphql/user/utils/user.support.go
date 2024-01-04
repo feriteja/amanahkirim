@@ -16,13 +16,6 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-type JwtData struct {
-	ID        string `json:"_id"`
-	BuyerID   string `json:"buyer_id"`
-	SellerID  string `json:"seller_id"`
-	ProfileID string `json:"profile_id"`
-}
-
 func HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

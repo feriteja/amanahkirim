@@ -20,7 +20,7 @@ type Buyer struct {
 	UserID            []primitive.ObjectID  `json:"user_id" bson:"user_id"`
 	Name              string                `json:"name" bson:"name"`
 	PhoneNumbers      string                `json:"phone_numbers" bson:"phone_numbers"`
-	Address           []*primitive.ObjectID `json:"address" bson:"address"`
+	Address           []*primitive.ObjectID `json:"address,omitempty" bson:"address,omitempty"`
 	DateOfBirth       time.Time             `json:"date_of_birth" bson:"date_of_birth"`
 	ProfilePictureURL string                `json:"profile_picture_url" bson:"profile_picture_url"`
 }
@@ -30,7 +30,7 @@ type Seller struct {
 	UserID            []primitive.ObjectID  `json:"user_id" bson:"user_id"`
 	Name              string                `json:"name" bson:"name"`
 	PhoneNumbers      string                `json:"phone_numbers" bson:"phone_numbers"`
-	Address           []*primitive.ObjectID `json:"address" bson:"address"`
+	Address           []*primitive.ObjectID `json:"address,omitempty" bson:"address,omitempty"`
 	ProfilePictureURL string                `json:"profile_picture_url" bson:"profile_picture_url"`
 }
 
